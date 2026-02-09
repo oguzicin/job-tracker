@@ -10,7 +10,7 @@ const authorization = require("./middleware/authorization");
 // Allowed origins for CORS
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://senin-projen.vercel.app" // Update this with your Vercel URL
+  "https://job-tracker-9wsnuqb5o-oguzs-projects-5ab88394.vercel.app/"
 ];
 
 
