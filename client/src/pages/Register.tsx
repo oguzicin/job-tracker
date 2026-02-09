@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAuth } from "../contexts/AuthContext"; 
+import { useAuth } from "../contexts/AuthContext";
 import LogButton from "../components/LogButton";
 import LogInput from "../components/LogInput";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
-  const { setUser } = useAuth(); 
+  const { setUser } = useAuth();
 
   const [inputs, setInputs] = useState({
     email: "",
@@ -33,14 +33,17 @@ const Register: React.FC = () => {
       const body = {
         email,
         password,
-        name: email.split("@")[0], // 'user123@gmail.com' -> 'user123' 
+        name: email.split("@")[0], // 'user123@gmail.com' -> 'user123'
       };
 
-      const response = await fetch("http://localhost:5000/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/auth/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        },
+      );
 
       const contentType = response.headers.get("content-type");
       let parseRes;
@@ -54,14 +57,13 @@ const Register: React.FC = () => {
 
       if (response.ok) {
         localStorage.setItem("token", parseRes.token);
-        
 
         setUser({
           name: parseRes.user?.name || body.name,
           email: parseRes.user?.email || body.email,
-          id: parseRes.user?.id || parseRes.userId || ""
+          id: parseRes.user?.id || parseRes.userId || "",
         });
-        
+
         toast.success("Account Created Successfully!");
         navigate("/dashboard");
       } else {
@@ -72,9 +74,7 @@ const Register: React.FC = () => {
     } catch (err: any) {
       console.error(err.message);
       toast.error(
-        err.message === "Server Error"
-          ? "Server error occurred."
-          : err.message,
+        err.message === "Server Error" ? "Server error occurred." : err.message,
       );
     }
   };
@@ -117,7 +117,7 @@ const Register: React.FC = () => {
         <div className="relative flex py-1 items-center">
           <div className="flex-grow border-t border-white"></div>
           <span className="flex-shrink mx-4 text-white text-xs">
-            Already have an account?  
+            Already have an account?
           </span>
           <div className="flex-grow border-t border-white"></div>
         </div>
