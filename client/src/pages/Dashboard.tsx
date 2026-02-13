@@ -27,34 +27,42 @@ const Dashboard: React.FC = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const response = await axios.get(API_URL, {
-          headers: { token: token },
-        });
-        setJobs(response.data);
-      } catch (err) {
-        console.error("Jobs fetch error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+const fetchJobs = async () => {
+  try {
+    const response = await axios.get(API_URL, {
+      headers: { token: token },
+    });
+    const normalizedJobs = response.data.map((job: Job) => ({
+      ...job,
+      status: job.status?.toLowerCase() ?? "pending", // ← buraya
+    }));
+    setJobs(normalizedJobs);
+  } catch (err) {
+    console.error("Jobs fetch error:", err);
+  } finally {
+    setLoading(false);
+  }
+};
 
     if (token) {
       fetchJobs();
     }
   }, [token]);
 
-  const handleAddNewJob = async (jobData: Job) => {
-    try {
-      const response = await axios.post(API_URL, jobData, {
-        headers: { token: token },
-      });
-      setJobs((prevJobs) => [...prevJobs, response.data]);
-    } catch (err) {
-      console.error("Add job error:", err);
-    }
-  };
+const handleAddNewJob = async (jobData: Job) => {
+  try {
+    const response = await axios.post(API_URL, jobData, {
+      headers: { token: token },
+    });
+    const newJob = {
+      ...response.data,
+      status: response.data.status?.toLowerCase() ?? "pending", // ← buraya
+    };
+    setJobs((prevJobs) => [...prevJobs, newJob]);
+  } catch (err) {
+    console.error("Add job error:", err);
+  }
+};
 
   const handleStatusChange = async (id: number, newStatus: string) => {
     try {
@@ -198,7 +206,7 @@ const Dashboard: React.FC = () => {
           <div className="">
             <CreateButton onJobCreated={handleAddNewJob} />
           </div>
-          
+
           <div className="relative flex py-1 w-[60vw] custom-xs:w-[320px] h-4 items-center">
             <div className="flex-grow w-full border-t border-white"></div>
             <span className="flex w-[100px] justify-center mx-0 text-white text-[11px]">
@@ -279,16 +287,8 @@ const Dashboard: React.FC = () => {
           <div className="flex-grow w-full border-t border-white/50"></div>
           <div className="flex-grow w-full border-t border-white/50"></div>
         </div>
-        <div
-          className="px-2 py-1 flex-grow w-full custom-xm:w-full overflow-y-auto overflow-x-hidden custom-scrollbar
-      [&::-webkit-scrollbbar]:w-3
-      [&::-webkit-scrollbar-track]:bg-transparent
-      [&::-webkit-scrollbar-thumb]:bg-white/30
-      [&::-webkit-scrollbar-thumb]:rounded-full
-      hover:[&::-webkit-scrollbar-thumb]:bg-white/70
-      "
-        >
-          <div className="flex flex-col gap-2">
+        <div className="px-2 py-1 flex-grow w-full custom-xm:w-full overflow-y-auto overflow-x-hidden rounded-b-[2.5rem] custom-scrollbar fade-bottom">
+          <div className="flex flex-col gap-2 pb-6">
             {loading ? (
               <p className="text-center text-slate-500">Loading jobs...</p>
             ) : displayJobs.length === 0 ? (
