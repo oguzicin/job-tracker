@@ -143,7 +143,9 @@ const Dashboard: React.FC = () => {
           <div className="text-white w-fit">
             <UserRound size={20} />
           </div>
-          <div className="text-white custom-sm:text-sm font-semibold">{user?.name || "User"}</div>
+          <div className="text-white custom-sm:text-sm font-semibold">
+            {user?.name || "User"}
+          </div>
         </div>
 
         <div className="flex justify-center">
@@ -186,9 +188,25 @@ const Dashboard: React.FC = () => {
               )}
             </div>
           </div>
+          <div className="relative flex py-1 w-[60vw] custom-xs:w-[320px] h-5 items-center">
+            <div className="flex-grow w-full border-t border-white"></div>
+            <span className="flex w-[150px] justify-center mx-2 text-white text-[11px]">
+              create job
+            </span>
+            <div className="flex-grow w-full border-t border-white"></div>
+          </div>
           <div className="">
             <CreateButton onJobCreated={handleAddNewJob} />
           </div>
+          
+          <div className="relative flex py-1 w-[60vw] custom-xs:w-[320px] h-4 items-center">
+            <div className="flex-grow w-full border-t border-white"></div>
+            <span className="flex w-[100px] justify-center mx-0 text-white text-[11px]">
+              sort
+            </span>
+            <div className="flex-grow w-full border-t border-white"></div>
+          </div>
+
           <div className="w-[55vw] custom-md:w-fit h-9 custom-xs:gap-y-1 custom-xm:py-1 custom-xs:h-fit custom-xs:flex-wrap flex justify-center gap-2 text-slate-400 ">
             <button
               onClick={() => setSortBy("newest")}
@@ -257,7 +275,10 @@ const Dashboard: React.FC = () => {
             </button>
           </div>
         </div>
-
+        <div className="relative flex w-[60vw] custom-xs:w-[320px] h-0 items-center">
+          <div className="flex-grow w-full border-t border-white/50"></div>
+          <div className="flex-grow w-full border-t border-white/50"></div>
+        </div>
         <div
           className="px-2 py-1 flex-grow w-full custom-xm:w-full overflow-y-auto overflow-x-hidden custom-scrollbar
       [&::-webkit-scrollbbar]:w-3
