@@ -17,13 +17,13 @@ type SortOption =
   | "location";
 
 const Dashboard: React.FC = () => {
-  const { user, loading: authLoading } = useAuth(); 
+  const { user, loading: authLoading } = useAuth();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchItem, setSearchItem] = useState<string>("");
   const [sortBy, setSortBy] = useState<SortOption>("newest");
 
-const API_URL = process.env.REACT_APP_API_URL + "/jobs"; 
+  const API_URL = process.env.REACT_APP_API_URL + "/jobs";
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -128,7 +128,6 @@ const API_URL = process.env.REACT_APP_API_URL + "/jobs";
 
   const displayJobs = getSortedJobs(filteredJobs);
 
-
   if (authLoading) {
     return (
       <div className="flex w-full min-h-screen items-center justify-center bg-indigo-50/50">
@@ -139,35 +138,32 @@ const API_URL = process.env.REACT_APP_API_URL + "/jobs";
 
   return (
     <div className="flex flex-col w-full min-h-screen items-center justify-center bg-gradient-to-br from-blue-300/95 via-purple-300 to-red-300 ">
-      <div className="bg-white/30 backdrop-blur-xl  border-white/20 shadow-xl rounded-[2.5rem] gap-2 flex flex-col items-center h-[95vh] w-[65vw]">
-        <div className="w-[100vw] h-fit flex justify-between px-[6vw]">
-          <div className="flex items-center gap-3 bg-white/30 p-[6px] rounded-xl  shadow-md">
-            <div className="text-white" >
-              <UserRound size={30} />
-            </div>
-            <div className="text-white font-semibold">
-              {user?.name || "User"}
-            </div>
+      <div className="w-[100vw] z-[99] h-fit fixed top-3 flex flex-row justify-between px-[3vw] custom-sm:px-1">
+        <div className="flex  items-center gap-1 w-fit bg-white/30 p-[6px] rounded-xl  shadow-md">
+          <div className="text-white w-fit">
+            <UserRound size={20} />
           </div>
-
-          <div>
-            <LogoutButton />
-          </div>
+          <div className="text-white custom-sm:text-sm font-semibold">{user?.name || "User"}</div>
         </div>
 
-        <div className="flex flex-colpy-4 text-3xl text-white font-bold text-opacity-100">
+        <div className="flex justify-center">
+          <LogoutButton />
+        </div>
+      </div>
+      <div className="bg-white/30 custom-xm:w-[95vw] custom-sm:w-[78vw] custom-xm:mt-10   backdrop-blur-xl  border-white/20 shadow-xl rounded-[2.5rem] gap-2 flex flex-col items-center h-[95vh] custom-xm:h-[90vh] w-[65vw]">
+        <div className="flex flex-col text-3xl custom-xs:text-[26px] mt-2 text-white font-bold text-opacity-100">
           <div>
             <h3>Application Tracker</h3>
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-2 w-full shrink-0">
-          <div className="w-[60vw] h-9 flex justify-center mb-2">
+        <div className="flex flex-col items-center gap-2 custom-xs:gap-0 w-full shrink-0 ">
+          <div className="w-[60vw] h-fit flex justify-center mb-2 ">
             <div className="relative w-[350px]">
               {/* Search Icon */}
               <Search
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 pointer-events-none"
-                size={18}
+                size={16}
               />
 
               {/* Input */}
@@ -176,7 +172,7 @@ const API_URL = process.env.REACT_APP_API_URL + "/jobs";
                 placeholder="Search jobs..."
                 value={searchItem}
                 onChange={(e) => setSearchItem(e.target.value)}
-                className="w-full rounded-xl pl-10 pr-10 py-2 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition shadow-sm bg-white/60"
+                className="w-full custom-xs:h-7 custom-xs:w-[300px] rounded-xl pl-10 pr-10 py-2 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition shadow-sm bg-white/60"
               />
 
               {/* Clear Button  */}
@@ -193,14 +189,10 @@ const API_URL = process.env.REACT_APP_API_URL + "/jobs";
           <div className="">
             <CreateButton onJobCreated={handleAddNewJob} />
           </div>
-          <div className="w-[50vw] h-9 flex justify-between text-slate-400">
-            <h1 className="flex flex-col  justify-center align-middle">
-              Sort:
-            </h1>
-
+          <div className="w-[55vw] custom-md:w-fit h-9 custom-xs:gap-y-1 custom-xm:py-1 custom-xs:h-fit custom-xs:flex-wrap flex justify-center gap-2 text-slate-400 ">
             <button
               onClick={() => setSortBy("newest")}
-              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] ${
+              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
                 sortBy === "newest"
                   ? "text-white bg-gray-600/30 font-semibold"
                   : "opacity-100  hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
@@ -211,7 +203,7 @@ const API_URL = process.env.REACT_APP_API_URL + "/jobs";
 
             <button
               onClick={() => setSortBy("oldest")}
-              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] ${
+              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
                 sortBy === "oldest"
                   ? "text-white bg-gray-600/30 font-semibold"
                   : "opacity-100  hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
@@ -222,7 +214,7 @@ const API_URL = process.env.REACT_APP_API_URL + "/jobs";
 
             <button
               onClick={() => setSortBy("company")}
-              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] ${
+              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
                 sortBy === "company"
                   ? "text-white bg-gray-600/30 font-semibold"
                   : "opacity-100  hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
@@ -233,7 +225,7 @@ const API_URL = process.env.REACT_APP_API_URL + "/jobs";
 
             <button
               onClick={() => setSortBy("position")}
-              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] ${
+              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
                 sortBy === "position"
                   ? "text-white bg-gray-600/30 font-semibold"
                   : "opacity-100  hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
@@ -244,7 +236,7 @@ const API_URL = process.env.REACT_APP_API_URL + "/jobs";
 
             <button
               onClick={() => setSortBy("status")}
-              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] ${
+              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
                 sortBy === "status"
                   ? "text-white bg-gray-600/30 font-semibold"
                   : "opacity-100  hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
@@ -255,7 +247,7 @@ const API_URL = process.env.REACT_APP_API_URL + "/jobs";
 
             <button
               onClick={() => setSortBy("location")}
-              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] ${
+              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
                 sortBy === "location"
                   ? "text-white bg-gray-600/30 font-semibold "
                   : "opacity-100  hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
@@ -267,7 +259,7 @@ const API_URL = process.env.REACT_APP_API_URL + "/jobs";
         </div>
 
         <div
-          className="px-2 py-4 flex-grow w-[800px] overflow-y-auto overflow-x-hidden custom-scrollbar
+          className="px-2 py-1 flex-grow w-full custom-xm:w-full overflow-y-auto overflow-x-hidden custom-scrollbar
       [&::-webkit-scrollbbar]:w-3
       [&::-webkit-scrollbar-track]:bg-transparent
       [&::-webkit-scrollbar-thumb]:bg-white/30
