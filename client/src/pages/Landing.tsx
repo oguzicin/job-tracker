@@ -61,7 +61,7 @@ const Landing: React.FC = () => {
   };
 
   return (
-    <div className="flex w-full min-h-screen items-center justify-center bg-gradient-to-br from-blue-300/95 via-blue-300/70 via-purple-300 to-red-300">
+    <div className="flex w-full min-h-screen items-center justify-center bg-gradient-to-br from-blue-300/95 via-purple-300 to-red-300">
       {/* Card box */}
       <div className="bg-white/30 shadow-md rounded-xl w-96 custom-xs:w-[93vw] p-8 flex flex-col gap-6">
         {/* header */}
