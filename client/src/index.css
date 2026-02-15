@@ -7,3 +7,9 @@ html, body, #root {
   margin: 0;
   padding: 0;
 }
+
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  background: linear-gradient(to bottom right, #93c5fd, #d8b4fe, #fca5a5);
+}
