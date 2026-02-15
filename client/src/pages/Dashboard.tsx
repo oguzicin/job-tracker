@@ -27,42 +27,73 @@ const Dashboard: React.FC = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-const fetchJobs = async () => {
-  try {
-    const response = await axios.get(API_URL, {
-      headers: { token: token },
-    });
-    const normalizedJobs = response.data.map((job: Job) => ({
-      ...job,
-      status: job.status?.toLowerCase() ?? "pending", // ← buraya
-    }));
-    setJobs(normalizedJobs);
-  } catch (err) {
-    console.error("Jobs fetch error:", err);
-  } finally {
-    setLoading(false);
-  }
-};
+    const fetchJobs = async () => {
+      try {
+        const response = await axios.get(API_URL, {
+          headers: { token: token },
+        });
+        const normalizedJobs = response.data.map((job: Job) => ({
+          ...job,
+          status: job.status?.toLowerCase() ?? "pending",
+        }));
+        setJobs(normalizedJobs);
+      } catch (err) {
+        console.error("Jobs fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     if (token) {
       fetchJobs();
     }
   }, [token]);
 
-const handleAddNewJob = async (jobData: Job) => {
-  try {
-    const response = await axios.post(API_URL, jobData, {
-      headers: { token: token },
-    });
-    const newJob = {
-      ...response.data,
-      status: response.data.status?.toLowerCase() ?? "pending", // ← buraya
-    };
-    setJobs((prevJobs) => [...prevJobs, newJob]);
-  } catch (err) {
-    console.error("Add job error:", err);
-  }
-};
+  const handleAddNewJob = async (jobData: Job) => {
+    try {
+      const response = await axios.post(API_URL, jobData, {
+        headers: { token: token },
+      });
+      const newJob = {
+        ...response.data,
+        status: response.data.status?.toLowerCase() ?? "pending",
+      };
+      setJobs((prevJobs) => [...prevJobs, newJob]);
+    } catch (err) {
+      console.error("Add job error:", err);
+    }
+  };
+
+  const handleUpdateJob = async (updatedJob: Job) => {
+    try {
+      const response = await axios.patch(
+        `${API_URL}/${updatedJob.id}`,
+        {
+          company: updatedJob.company,
+          position: updatedJob.position,
+          status: updatedJob.status,
+          jobType: updatedJob.jobType,
+          jobLocation: updatedJob.jobLocation,
+          dateApplied: updatedJob.dateApplied,
+        },
+        {
+          headers: { token: token },
+        }
+      );
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
+          job.id === updatedJob.id
+            ? {
+                ...response.data,
+                status: response.data.status?.toLowerCase() ?? updatedJob.status,
+              }
+            : job
+        )
+      );
+    } catch (err) {
+      console.error("Update error:", err);
+    }
+  };
 
   const handleStatusChange = async (id: number, newStatus: string) => {
     try {
@@ -71,12 +102,12 @@ const handleAddNewJob = async (jobData: Job) => {
         { status: newStatus },
         {
           headers: { token: token },
-        },
+        }
       );
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
-          job.id === id ? { ...job, status: newStatus } : job,
-        ),
+          job.id === id ? { ...job, status: newStatus } : job
+        )
       );
     } catch (err) {
       console.error("Status update error:", err);
@@ -106,7 +137,6 @@ const handleAddNewJob = async (jobData: Job) => {
 
   const getSortedJobs = (jobsList: Job[]) => {
     const sorted = [...jobsList];
-
     switch (sortBy) {
       case "newest":
         return sorted.reverse();
@@ -127,7 +157,7 @@ const handleAddNewJob = async (jobData: Job) => {
         });
       case "location":
         return sorted.sort((a, b) =>
-          a.jobLocation.localeCompare(b.jobLocation),
+          a.jobLocation.localeCompare(b.jobLocation)
         );
       default:
         return sorted.reverse();
@@ -145,9 +175,9 @@ const handleAddNewJob = async (jobData: Job) => {
   }
 
   return (
-    <div className="flex flex-col w-full min-h-screen items-center justify-center bg-gradient-to-br from-blue-300/95 via-purple-300 to-red-300 ">
+    <div className="flex flex-col w-full min-h-[100dvh] items-center justify-center bg-gradient-to-br from-blue-300/95 via-purple-300 to-red-300">
       <div className="w-[100vw] z-[99] h-fit fixed top-3 flex flex-row justify-between px-[3vw] custom-sm:px-1">
-        <div className="flex  items-center gap-1 w-fit bg-white/30 p-[6px] rounded-xl  shadow-md">
+        <div className="flex items-center gap-1 w-fit bg-white/30 p-[6px] rounded-xl shadow-md">
           <div className="text-white w-fit">
             <UserRound size={20} />
           </div>
@@ -155,28 +185,23 @@ const handleAddNewJob = async (jobData: Job) => {
             {user?.name || "User"}
           </div>
         </div>
-
         <div className="flex justify-center">
           <LogoutButton />
         </div>
       </div>
-      <div className="bg-white/30 custom-xm:w-[95vw] custom-sm:w-[78vw] custom-xm:mt-10   backdrop-blur-xl  border-white/20 shadow-xl rounded-[2.5rem] gap-2 flex flex-col items-center h-[95vh] custom-xm:h-[90vh] w-[65vw]">
+
+      <div className="bg-white/30 custom-xm:w-[95vw] custom-sm:w-[78vw] custom-xm:mt-10 backdrop-blur-xl border-white/20 shadow-xl rounded-[2.5rem] gap-2 flex flex-col items-center h-[95vh] custom-xm:h-[90vh] w-[65vw]">
         <div className="flex flex-col text-3xl custom-xs:text-[26px] mt-2 text-white font-bold text-opacity-100">
-          <div>
-            <h3>Application Tracker</h3>
-          </div>
+          <h3>Application Tracker</h3>
         </div>
 
-        <div className="flex flex-col items-center gap-2 custom-xs:gap-0 w-full shrink-0 ">
-          <div className="w-[60vw] h-fit flex justify-center mb-2 ">
+        <div className="flex flex-col items-center gap-2 custom-xs:gap-0 w-full shrink-0">
+          <div className="w-[60vw] h-fit flex justify-center mb-2">
             <div className="relative w-[350px]">
-              {/* Search Icon */}
               <Search
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 pointer-events-none"
                 size={16}
               />
-
-              {/* Input */}
               <input
                 type="text"
                 placeholder="Search jobs..."
@@ -184,8 +209,6 @@ const handleAddNewJob = async (jobData: Job) => {
                 onChange={(e) => setSearchItem(e.target.value)}
                 className="w-full custom-xs:h-7 custom-xs:w-[300px] rounded-xl pl-10 pr-10 py-2 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition shadow-sm bg-white/60"
               />
-
-              {/* Clear Button  */}
               {searchItem && (
                 <button
                   onClick={() => setSearchItem("")}
@@ -196,6 +219,7 @@ const handleAddNewJob = async (jobData: Job) => {
               )}
             </div>
           </div>
+
           <div className="relative flex py-1 w-[60vw] custom-xs:w-[320px] h-5 items-center">
             <div className="flex-grow w-full border-t border-white"></div>
             <span className="flex w-[150px] justify-center mx-2 text-white text-[11px]">
@@ -203,7 +227,7 @@ const handleAddNewJob = async (jobData: Job) => {
             </span>
             <div className="flex-grow w-full border-t border-white"></div>
           </div>
-          <div className="">
+          <div>
             <CreateButton onJobCreated={handleAddNewJob} />
           </div>
 
@@ -215,78 +239,37 @@ const handleAddNewJob = async (jobData: Job) => {
             <div className="flex-grow w-full border-t border-white"></div>
           </div>
 
-          <div className="w-[55vw] custom-md:w-fit h-9 custom-xs:gap-y-1 custom-xm:py-1 custom-xs:h-fit custom-xs:flex-wrap flex justify-center gap-2 text-slate-400 ">
-            <button
-              onClick={() => setSortBy("newest")}
-              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
-                sortBy === "newest"
-                  ? "text-white bg-gray-600/30 font-semibold"
-                  : "opacity-100  hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
-              }`}
-            >
-              Newest
-            </button>
-
-            <button
-              onClick={() => setSortBy("oldest")}
-              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
-                sortBy === "oldest"
-                  ? "text-white bg-gray-600/30 font-semibold"
-                  : "opacity-100  hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
-              }`}
-            >
-              Oldest
-            </button>
-
-            <button
-              onClick={() => setSortBy("company")}
-              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
-                sortBy === "company"
-                  ? "text-white bg-gray-600/30 font-semibold"
-                  : "opacity-100  hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
-              }`}
-            >
-              Company
-            </button>
-
-            <button
-              onClick={() => setSortBy("position")}
-              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
-                sortBy === "position"
-                  ? "text-white bg-gray-600/30 font-semibold"
-                  : "opacity-100  hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
-              }`}
-            >
-              Position
-            </button>
-
-            <button
-              onClick={() => setSortBy("status")}
-              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
-                sortBy === "status"
-                  ? "text-white bg-gray-600/30 font-semibold"
-                  : "opacity-100  hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
-              }`}
-            >
-              Status
-            </button>
-
-            <button
-              onClick={() => setSortBy("location")}
-              className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
-                sortBy === "location"
-                  ? "text-white bg-gray-600/30 font-semibold "
-                  : "opacity-100  hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
-              }`}
-            >
-              Location
-            </button>
+          <div className="w-[55vw] custom-md:w-fit h-9 custom-xs:gap-y-1 custom-xm:py-1 custom-xs:h-fit custom-xs:flex-wrap flex justify-center gap-2 text-slate-400">
+            {(
+              [
+                "newest",
+                "oldest",
+                "company",
+                "position",
+                "status",
+                "location",
+              ] as SortOption[]
+            ).map((option) => (
+              <button
+                key={option}
+                onClick={() => setSortBy(option)}
+                className={`px-2 transition duration-300 bg-white/20 rounded-xl w-[100px] custom-xm:w-fit custom-xm:text-[11px] ${
+                  sortBy === option
+                    ? "text-white bg-gray-600/30 font-semibold"
+                    : "opacity-100 hover:bg-gray-200 hover:bg-opacity-40 hover:text-gray-700"
+                }`}
+              >
+                {option.charAt(0).toUpperCase() + option.slice(1)}
+              </button>
+            ))}
           </div>
         </div>
+
         <div className="relative flex w-[60vw] custom-xs:w-[320px] h-0 items-center">
           <div className="flex-grow w-full border-t border-white/50"></div>
           <div className="flex-grow w-full border-t border-white/50"></div>
         </div>
+
         <div className="px-2 py-1 flex-grow w-full custom-xm:w-full overflow-y-auto overflow-x-hidden rounded-b-[2.5rem] custom-scrollbar fade-bottom">
           <div className="flex flex-col gap-2 pb-6">
             {loading ? (
@@ -300,6 +283,7 @@ const handleAddNewJob = async (jobData: Job) => {
                   data={job}
                   onStatusChange={handleStatusChange}
                   onDelete={handleDeleteJob}
+                  onUpdate={handleUpdateJob}
                 />
               ))
             )}

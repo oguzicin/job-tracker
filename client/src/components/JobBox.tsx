@@ -20,6 +20,11 @@ const JobBox: React.FC<JobBoxProps> = ({
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [editData, setEditData] = React.useState<Job>(data);
 
+  // data prop değiştiğinde editData senkronize edilir
+  React.useEffect(() => {
+    setEditData(data);
+  }, [data]);
+
   const statusBgMap: Record<string, string> = {
     pending: "bg-orange-300",
     interview: "bg-blue-300",
@@ -59,7 +64,7 @@ const JobBox: React.FC<JobBoxProps> = ({
               </div>
             </div>
           </div>,
-          document.body,
+          document.body
         )}
 
       <div
@@ -125,25 +130,21 @@ const JobBox: React.FC<JobBoxProps> = ({
                 {data.company}
               </h3>
             </div>
-
             <div className="flex-1 min-w-0">
               <p className="text-blue-600 truncate text-[9px] xs:text-[10px] sm:text-xs md:text-sm">
                 {data.position}
               </p>
             </div>
-
             <div className="flex-1 min-w-0">
               <p className="truncate text-[9px] xs:text-[10px] sm:text-xs md:text-sm">
                 {data.jobType}
               </p>
             </div>
-
             <div className="flex-1 min-w-0">
               <span className="truncate block text-[9px] xs:text-[10px] sm:text-xs md:text-sm">
                 {data.jobLocation}
               </span>
             </div>
-
             <div className="flex-1 min-w-0">
               <span className="truncate block text-[9px] xs:text-[10px] sm:text-xs md:text-sm">
                 {data.dateApplied
@@ -151,13 +152,12 @@ const JobBox: React.FC<JobBoxProps> = ({
                   : "-"}
               </span>
             </div>
-
-            <div className="shrink-0 ">
+            <div className="shrink-0">
               <select
                 value={data.status}
                 onChange={(e) => onStatusChange?.(data.id!, e.target.value)}
                 className={`focus:outline-none text-white rounded-md transition-colors duration-200 justify-center flex font-medium
-                  text-[8px]  custom-xs:h-[24px] custom-xs:w-[55px] custom-xs:text-[8px] sm:text-xs md:text-sm
+                  text-[8px] custom-xs:h-[24px] custom-xs:w-[55px] custom-xs:text-[8px] sm:text-xs md:text-sm
                   px-1 sm:px-2 py-0.5 sm:py-1
                   ${statusBgMap[data.status]}`}
               >
